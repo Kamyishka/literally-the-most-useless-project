@@ -3,9 +3,7 @@
 
 This project currently contains three different steganography methods in digital images and a small database of images.
 
----
 
-# Methods
 
 Existing methods (Source/):
 - Least Significant Bit      (LSB).
@@ -19,9 +17,7 @@ Existing methods (Source/):
   - DCT_reveal.py - reveals the message hidden by this method
   - dct_processing.py - image preparation (discrete cosine transform, quantization, functions for channel processing)
 
----
 
-# Images
 
 Images for testing the methods (Examples/) are divided into four groups. 
 1. 512px (22 images) - photos taken by me, size 512x512 in .png format.
@@ -35,9 +31,7 @@ Such images are often used in papers about steganography.
 
 Examples/ also contains some text files and a small watermark.jpg file as secret messages.
 
----
 
-# Development
 
 In development:
 - error correction (hamming code) for DCT
