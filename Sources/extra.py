@@ -51,7 +51,7 @@ def bin_to_file(binlist, filename='output_file'):
 # Output: number of bits to embed, left and right 
 # boundaries of the interval in which the difference lies
 def embed_number(n):
-    srange = (0, 2, 4, 8, 16, 32, 64, 128, 256)
+    srange = (0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256)
     l , r = 0, len(srange) - 1
     while r - l > 1:
         mid = (l + r) // 2
@@ -69,21 +69,21 @@ def change_difference(a, b, dif, newdif):
     if a > b:
         a, b = b, a
         swap = True
-
+    
     upper_add = abs(newdif - dif) // 2 + abs(newdif - dif) % 2
     lower_add = abs(newdif - dif) // 2
 
+    # Overflow handling
     if newdif > dif:
         if a - upper_add < 0:
             shift = upper_add - a
             upper_add -= shift
             lower_add += shift
-            #print("1")
+
         if b + lower_add > 255:
             shift = b + lower_add - 255
             lower_add -= shift
             upper_add += shift
-            #print("2")
 
         a -= upper_add
         b += lower_add
@@ -94,3 +94,39 @@ def change_difference(a, b, dif, newdif):
     if swap:
         a, b = b, a
     return a, b
+
+
+def pixel_dif(a, b):
+    return max(a, b) - min(a, b)
+
+
+def search_best_pairs(row):
+    # Maximum possible capacity for all pixels up to i - 2 and i - 1 respectively
+    a, b = 0, embed_number(pixel_dif(row[1], row[0]))[0]
+
+    # To save memory, we will store only two arrays and swap them around
+    is_swaped = True
+
+    # Two arrays for dynamic programming, contain pairs of indexes of 
+    # the first element of a pair of pixels and the number of bits to embed in that pair
+    dp1, dp2 = [], [(0, embed_number(pixel_dif(row[1], row[0])))]
+
+    for i in range(2, len(row), 1):
+        embed = embed_number(pixel_dif(row[i], row[i - 1]))
+        if a + embed[0] > b:
+            if is_swaped:
+                dp1.append((i - 1, embed))
+            else:
+                dp2.append((i - 1, embed))
+
+            b, a = a + embed[0], b
+        else:
+            if is_swaped:
+                dp1 = dp2.copy()
+            else:
+                dp2 = dp1.copy()
+
+            a = b
+        is_swaped = not is_swaped
+
+    return (dp2.copy() if is_swaped else dp1.copy())
