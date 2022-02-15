@@ -3,7 +3,7 @@
 
 This project currently contains three different steganography methods in digital images and a small database of images.
 
-
+***
 
 Existing methods (Source/):
 - Least Significant Bit      (LSB).
@@ -16,8 +16,11 @@ Existing methods (Source/):
   - DCT_hide.py - hides the message in the image using the classic DCT method (uses only one DC-coefficient in each block)
   - DCT_reveal.py - reveals the message hidden by this method
   - dct_processing.py - image preparation (discrete cosine transform, quantization, functions for channel processing)
+- Modified Pixel-value Differencing (MPVD - my own idea).
+  - MPVD_hide.py - hides the message in the image using the PVD method with dynamic programming
+  - MPVD_reveal.py - reveals the message hidden by this method
 
-
+***
 
 Images for testing the methods (Examples/) are divided into four groups. 
 1. 512px (22 images) - photos taken by me, size 512x512 in .png format.
@@ -31,9 +34,9 @@ Such images are often used in papers about steganography.
 
 Examples/ also contains some text files and a small watermark.jpg file as secret messages.
 
-
+***
 
 In development:
 - error correction (hamming code) for DCT
 - using multiple images as containers for a single message
-- enhanced PVD using dynamic programming to increase capacity
+- generating difference image between the original ang output
