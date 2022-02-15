@@ -98,35 +98,3 @@ def change_difference(a, b, dif, newdif):
 
 def pixel_dif(a, b):
     return max(a, b) - min(a, b)
-
-
-def search_best_pairs(row):
-    # Maximum possible capacity for all pixels up to i - 2 and i - 1 respectively
-    a, b = 0, embed_number(pixel_dif(row[1], row[0]))[0]
-
-    # To save memory, we will store only two arrays and swap them around
-    is_swaped = True
-
-    # Two arrays for dynamic programming, contain pairs of indexes of 
-    # the first element of a pair of pixels and the number of bits to embed in that pair
-    dp1, dp2 = [], [(0, embed_number(pixel_dif(row[1], row[0])))]
-
-    for i in range(2, len(row), 1):
-        embed = embed_number(pixel_dif(row[i], row[i - 1]))
-        if a + embed[0] > b:
-            if is_swaped:
-                dp1.append((i - 1, embed))
-            else:
-                dp2.append((i - 1, embed))
-
-            b, a = a + embed[0], b
-        else:
-            if is_swaped:
-                dp1 = dp2.copy()
-            else:
-                dp2 = dp1.copy()
-
-            a = b
-        is_swaped = not is_swaped
-
-    return (dp2.copy() if is_swaped else dp1.copy())

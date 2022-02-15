@@ -32,7 +32,7 @@ def lsb_reveal(img, bits=1, out_name='output_file'):
 
 def main():
 	if len(sys.argv) == 1:
-		print("Specify the path to the photo")
+		print("Specify the path to the photo.")
 	else:
 		try:
 			image = imread(sys.argv[1])

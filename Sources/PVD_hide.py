@@ -63,7 +63,7 @@ def pvd_hide(img, filename, out_name='output'):
     
     # The file must be saved without compression
     imsave(out_name + '.png', img)
-    print(capacity)
+    return capacity
 
 
 def main():
