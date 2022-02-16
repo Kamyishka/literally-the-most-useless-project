@@ -4,7 +4,9 @@
 
 
 # ------------------------- External libraries ------------------------ #
-from numpy import log2
+import numpy as np
+from skimage.io import imsave
+from skimage import img_as_float, img_as_ubyte
 
 
 # --------- Section 1: file handling and conversion to binary --------- #
@@ -59,7 +61,7 @@ def embed_number(n):
             r = mid
         else:
             l = mid
-    return int(log2(srange[r] - srange[l])), srange[l], srange[r]
+    return int(np.log2(srange[r] - srange[l])), srange[l], srange[r]
 
 # Input: three numbers in [0; 255]
 # Output: two numbers in [0; 255] altered so that the difference
@@ -98,3 +100,43 @@ def change_difference(a, b, dif, newdif):
 
 def pixel_dif(a, b):
     return max(a, b) - min(a, b)
+
+
+
+# ----------------- Section 3: additional functionality ----------------- #
+
+# Input: two images of the same shape
+# Output: 
+def generate_difference(original, output):
+    # Find out the number of channels
+    c = 3 if len(original.shape) == 3 else 1
+    dif = abs(img_as_float(original) - img_as_float(output))
+    if c == 1:
+        dif -= dif.min()
+        dif = dif / dif.max()
+        imsave("difference.png", img_as_ubyte(dif))
+    else:
+        black = original[:,:,0] * 0
+        dif_r = dif[:, :, 0]
+        dif_g = dif[:, :, 1]
+        dif_b = dif[:, :, 2]
+        dif = np.dstack((dif_b, dif_g, dif_r))
+        dif -= dif.min()
+        dif = dif * 1 / dif.max()
+
+        dif_r -= dif_r.min()
+        dif_r = dif_r / dif_r.max()
+        dif_r = np.dstack((dif_r, black, black))
+
+        dif_g -= dif_g.min()
+        dif_g = dif_g / dif_g.max()
+        dif_g = np.dstack((black, dif_g, black))
+
+        dif_b -= dif_b.min()
+        dif_b = dif_b / dif_b.max()
+        dif_b = np.dstack((black, black, dif_b))
+
+        imsave("difference.png", img_as_ubyte(dif))
+        imsave("differencer.png", img_as_ubyte(dif_r))
+        imsave("differenceg.png", img_as_ubyte(dif_g))
+        imsave("differenceb.png", img_as_ubyte(dif_b))

@@ -7,9 +7,12 @@ from skimage.io import imread, imsave
 import sys
 
 # ~~~~~~~~~~~~~~ Source code ~~~~~~~~~~~~~ #
-from extra import file_to_bin
+from extra import file_to_bin, generate_difference
 
-def lsb_hide(img, filename, bits=1, out_name='output'):
+def lsb_hide(img, filename, bits=1, out_name='output', difference=False):
+    # Save original image
+    original = img.copy()
+
     # Find out the size of the image and the number of channels
     a, b = img.shape[0], img.shape[1]
     c = 3 if len(img.shape) == 3 else 1
@@ -37,6 +40,10 @@ def lsb_hide(img, filename, bits=1, out_name='output'):
                 x += 1
         i += 1
 
+    # Generate difference between the original image and the output
+    if difference:
+        generate_difference(original, img)
+
     # The file must be saved without compression
     imsave(out_name + '.png', img)
 
@@ -48,13 +55,22 @@ def main():
         try:
             img = imread(sys.argv[1])
             file = open(sys.argv[2])
-            if len(sys.argv) == 4:
-                print(lsb_hide(img, sys.argv[2], 1, sys.argv[3]))
-            else:
-                print(lsb_hide(img, sys.argv[2], 1))
         except FileNotFoundError:
             print("This file does not exist.")
+            exit()
 
+        print("Do you want to generate difference image? (y/n):", end='')
+        answer = input()
+        if answer.lower() == 'y' or answer.lower() == 'yes':
+            if len(sys.argv) == 4:
+                lsb_hide(img, sys.argv[2], 1, sys.argv[3], True)
+            else:
+                lsb_hide(img, sys.argv[2], 1, difference=True)
+        else:
+            if len(sys.argv) == 4:
+                lsb_hide(img, sys.argv[2], 1, sys.argv[3])
+            else:
+                lsb_hide(img, sys.argv[2], 1)
 
 if __name__ == '__main__':
     main()

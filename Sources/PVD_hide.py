@@ -8,8 +8,12 @@ import sys
 
 # ~~~~~~~~~~~~~~ Source code ~~~~~~~~~~~~~ #
 from extra import file_to_bin, embed_number, change_difference
+from extra import generate_difference
 
-def pvd_hide(img, filename, out_name='output'):
+def pvd_hide(img, filename, out_name='output', difference=False):
+    # Save original image
+    original = img.copy()
+
     # Find out the size of the image and the number of channels
     a, b = img.shape[0], img.shape[1]
     c = 3 if len(img.shape) == 3 else 1
@@ -61,6 +65,10 @@ def pvd_hide(img, filename, out_name='output'):
                 capacity += emb[0]
         i += 1
     
+    # Generate difference between the original image and the output
+    if difference:
+        generate_difference(original, img)
+
     # The file must be saved without compression
     imsave(out_name + '.png', img)
     return capacity
@@ -73,12 +81,22 @@ def main():
         try:
             img = imread(sys.argv[1])
             file = open(sys.argv[2])
+        except FileNotFoundError:
+            print("This file does not exist.")
+            exit()
+
+        print("Do you want to generate difference image? (y/n):", end='')
+        answer = input()
+        if answer.lower() == 'y' or answer.lower() == 'yes':
+            if len(sys.argv) == 4:
+                pvd_hide(img, sys.argv[2], sys.argv[3], True)
+            else:
+                pvd_hide(img, sys.argv[2], difference=True)
+        else:
             if len(sys.argv) == 4:
                 pvd_hide(img, sys.argv[2], sys.argv[3])
             else:
                 pvd_hide(img, sys.argv[2])
-        except FileNotFoundError:
-            print("This file does not exist.")
 
 
 if __name__ == '__main__':

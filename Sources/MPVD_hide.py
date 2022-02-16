@@ -10,6 +10,7 @@ import sys
 # ~~~~~~~~~~~~~~ Source code ~~~~~~~~~~~~~ #
 from extra import file_to_bin, bin_to_file
 from extra import embed_number, change_difference, pixel_dif
+from extra import generate_difference
 
 def search_best_pairs(row):
     # We need to always include the first pair in the answer
@@ -108,7 +109,10 @@ def change_parity(a, b, odd):
     return a, b
 
 
-def cool_pvd_hide(img, filename, out_name='output'):
+def cool_pvd_hide(img, filename, out_name='output', difference=False):
+    # Save original image
+    original = img.copy()
+
     # Find out the size of the image and the number of channels
     a, b = img.shape[0], img.shape[1]
     c = 3 if len(img.shape) == 3 else 1
@@ -172,6 +176,10 @@ def cool_pvd_hide(img, filename, out_name='output'):
                 capacity += bits
             i += 1
     
+    # Generate difference between the original image and the output
+    if difference:
+        generate_difference(original, img)
+
     # The file must be saved without compression
     imsave(out_name + '.png', img)
     return capacity
@@ -184,12 +192,22 @@ def main():
         try:
             img = imread(sys.argv[1])
             file = open(sys.argv[2])
-            if len(sys.argv) == 4:
-                coo_pvd_hide(img, sys.argv[2], sys.argv[3])
-            else:
-                cool_pvd_hide(img, sys.argv[2])
         except FileNotFoundError:
             print("This file does not exist.")
+            exit()
+
+        print("Do you want to generate difference image? (y/n):", end='')
+        answer = input()
+        if answer.lower() == 'y' or answer.lower() == 'yes':
+            if len(sys.argv) == 4:
+                cool_pvd_hide(img, sys.argv[2], sys.argv[3], True)
+            else:
+                cool_pvd_hide(img, sys.argv[2], difference=True)
+        else:
+            if len(sys.argv) == 4:
+                cool_pvd_hide(img, sys.argv[2], sys.argv[3])
+            else:
+                cool_pvd_hide(img, sys.argv[2])
 
 
 if __name__ == '__main__':
