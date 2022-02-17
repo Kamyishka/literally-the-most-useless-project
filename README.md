@@ -1,7 +1,7 @@
 # literally-the-most-useless-project
 [Different steganography methods with examples and my own small image database]
 
-This project currently contains three different steganography methods in digital images and a small database of images.
+This project currently contains four different steganography methods in digital images and a small database of images.
 
 ***
 
@@ -20,6 +20,7 @@ Existing methods (Source/):
   - MPVD_hide.py - hides the message in the image using the PVD method with dynamic programming
   - MPVD_reveal.py - reveals the message hidden by this method
 
+extra.py contains functions needed for different files, such as file conversion to bitstream, functions common to all PVD methods (finding pixel difference boundaries), and image difference generation.
 ***
 
 Images for testing the methods (Examples/) are divided into four groups. 
@@ -39,4 +40,3 @@ Examples/ also contains some text files and a small watermark.jpg file as secret
 In development:
 - error correction (hamming code) for DCT
 - using multiple images as containers for a single message
-- generating difference image between the original ang output
