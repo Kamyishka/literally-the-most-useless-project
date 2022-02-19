@@ -5,8 +5,9 @@
 
 # ------------------------- External libraries ------------------------ #
 import numpy as np
-from skimage.io import imsave
+from skimage.io import imsave, imread
 from skimage import img_as_float, img_as_ubyte
+from sewar.full_ref import mse, psnr, ssim, msssim
 
 
 # --------- Section 1: file handling and conversion to binary --------- #
@@ -53,7 +54,8 @@ def bin_to_file(binlist, filename='output_file'):
 # Output: number of bits to embed, left and right 
 # boundaries of the interval in which the difference lies
 def embed_number(n):
-    srange = (0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256)
+    #srange = (0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256)
+    srange = (0, 2, 4, 6, 8, 16, 32, 64, 128, 192, 256)
     l , r = 0, len(srange) - 1
     while r - l > 1:
         mid = (l + r) // 2
@@ -103,10 +105,10 @@ def pixel_dif(a, b):
 
 
 
-# ----------------- Section 3: additional functionality ----------------- #
+# -------------- Section 3: additional functionality -------------- #
 
 # Input: two images of the same shape
-# Output: 
+# Output: difference image (and three difference images for each channel, if they exist)
 def generate_difference(original, output):
     # Find out the number of channels
     c = 3 if len(original.shape) == 3 else 1
@@ -137,6 +139,7 @@ def generate_difference(original, output):
         dif_b = np.dstack((black, black, dif_b))
 
         imsave("difference.png", img_as_ubyte(dif))
-        imsave("differencer.png", img_as_ubyte(dif_r))
-        imsave("differenceg.png", img_as_ubyte(dif_g))
-        imsave("differenceb.png", img_as_ubyte(dif_b))
+        imsave("difference_r.png", img_as_ubyte(dif_r))
+        imsave("difference_g.png", img_as_ubyte(dif_g))
+        imsave("difference_b.png", img_as_ubyte(dif_b))
+    return img_as_ubyte(dif)

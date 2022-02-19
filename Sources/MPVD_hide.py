@@ -12,6 +12,10 @@ from extra import file_to_bin, bin_to_file
 from extra import embed_number, change_difference, pixel_dif
 from extra import generate_difference
 
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
+
 def search_best_pairs(row):
     # We need to always include the first pair in the answer
     first_pair = [(0, embed_number(pixel_dif(row[1], row[0])))]
@@ -205,9 +209,9 @@ def main():
                 cool_pvd_hide(img, sys.argv[2], difference=True)
         else:
             if len(sys.argv) == 4:
-                cool_pvd_hide(img, sys.argv[2], sys.argv[3])
+                print(cool_pvd_hide(img, sys.argv[2], sys.argv[3]))
             else:
-                cool_pvd_hide(img, sys.argv[2])
+                print(cool_pvd_hide(img, sys.argv[2]))
 
 
 if __name__ == '__main__':

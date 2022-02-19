@@ -9,6 +9,9 @@ import sys
 # ~~~~~~~~~~~~~~ Source code ~~~~~~~~~~~~~ #
 from extra import bin_to_file
 
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
 
 def lsb_reveal(img, bits=1, out_name='output_file'):
 	# Find out the size of the image and the number of channels

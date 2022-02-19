@@ -9,6 +9,10 @@ import sys
 # ~~~~~~~~~~~~~~ Source code ~~~~~~~~~~~~~ #
 from extra import file_to_bin, generate_difference
 
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
+
 def lsb_hide(img, filename, bits=1, out_name='output', difference=False):
     # Save original image
     original = img.copy()

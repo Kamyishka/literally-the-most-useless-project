@@ -14,7 +14,11 @@ from dct_processing import dct_process_channel as dct
 from dct_processing import idct_process_channel as idct
 from extra import file_to_bin, bin_to_file
 
-_quality = 90
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
+
+_quality = 70
 
 # Input: stego RGB-image
 # Output: saves a hidden file with the given name (optional)
@@ -38,7 +42,7 @@ def dct_reveal(img, out_name='output_file', N=8):
         for i in range(0, a, 8):
             for j in range(0, b, 8):
                 for k in range(c):
-                    bitstream.append(str(int(abs(newimg[i, j, k])) % 2))
+                    bitstream.append(str(int(abs(newimg[i + 1, j + 1, k])) % 2))
 
         # Convert the bitstream to a file
         bin_to_file(bitstream, out_name)

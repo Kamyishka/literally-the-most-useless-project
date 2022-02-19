@@ -10,6 +10,10 @@ import sys
 # ~~~~~~~~~~~~~~ Source code ~~~~~~~~~~~~~ #
 from extra import bin_to_file, embed_number
 
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
+
 def pvd_reveal(img, out_name='output_file'):
     # Find out the size of the image and the number of channels
     a, b = img.shape[0], img.shape[1]

@@ -10,6 +10,10 @@ import sys
 from extra import file_to_bin, embed_number, change_difference
 from extra import generate_difference
 
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
+
 def pvd_hide(img, filename, out_name='output', difference=False):
     # Save original image
     original = img.copy()
@@ -46,7 +50,6 @@ def pvd_hide(img, filename, out_name='output', difference=False):
                 # Exit if all the secret message is already embedded
                 if x + emb[0] >= len(data):
                     message_not_ended = False
-                    print("Success (message ended).")
                     break
 
                 # Convert the required number of bits into a number
@@ -94,9 +97,9 @@ def main():
                 pvd_hide(img, sys.argv[2], difference=True)
         else:
             if len(sys.argv) == 4:
-                pvd_hide(img, sys.argv[2], sys.argv[3])
+                print(pvd_hide(img, sys.argv[2], sys.argv[3]))
             else:
-                pvd_hide(img, sys.argv[2])
+                print(pvd_hide(img, sys.argv[2]))
 
 
 if __name__ == '__main__':

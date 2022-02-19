@@ -15,10 +15,13 @@ from dct_processing import idct_process_channel as idct
 from extra import file_to_bin, bin_to_file
 from extra import generate_difference
 
+# Some of the images in the examples are not readable by the library
+from PIL import PngImagePlugin
+PngImagePlugin.MAX_TEXT_CHUNK = 500 * (1024**2)
 
 # the value lying in the interval [1; 99],
 # which determines the image quality
-_quality = 90
+_quality = 70
 
 # Input: RGB-image (container), file name with extension (secret message)
 # Output: saves a PNG stego-image with the given name (optional)
@@ -54,7 +57,7 @@ def dct_hide(img, filename, out_name='output', N=8, difference=False):
             for j in range(0, b, 8):
                 for k in range(c):
                     if index + 1 < len(data):
-                        newimg[i, j, k] += -(int(newimg[i, j, k]) % 2) + int(data[index])
+                        newimg[i + 1, j + 1, k] += -(int(newimg[i + 1, j + 1, k]) % 2) + int(data[index])
                         index += 1
 
 
